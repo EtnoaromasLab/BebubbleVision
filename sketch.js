@@ -1,8 +1,3 @@
-script src="libraries/p5.js";
-script src="libraries/p5.dom.min.js";
-script src="libraries/p5.sound.min.js";
-script src="libraries/ml5.min.js";
-
 let imageModelURL = 'https://teachablemachine.withgoogle.com/models/I_02OOZ7-/';
 let video;
 let flippedVideo;
