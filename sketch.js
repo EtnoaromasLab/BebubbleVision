@@ -1,9 +1,7 @@
 <script src="libraries/p5.js"></script>
-<script src="libraries/ml5.min.js"></script>
 <script src="libraries/p5.dom.min.js"></script>
 <script src="libraries/p5.sound.min.js"></script>
 <script src="libraries/ml5.min.js"></script>
-<script src="libraries/ml5.min.js" type="text/javascript"></script>
 
 let imageModelURL = 'https://teachablemachine.withgoogle.com/models/I_02OOZ7-/';
 let video;
