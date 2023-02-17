@@ -33,7 +33,7 @@ function setup() {
 
 function draw() {
   background(0);
-  image(flippedVideo, 0, 0, width, height);
+  image(flippedVideo, 500, 50, width, height);
   fill(255);
   textSize(40);
   textAlign(CENTER);
