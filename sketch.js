@@ -1,4 +1,4 @@
-let imageModelURL = 'https://teachablemachine.withgoogle.com/models/I_02OOZ7-/';
+let imageModelURL = 'https://teachablemachine.withgoogle.com/models/7zMLTbqSz/';
 let video;
 let flippedVideo;
 let label = "";
