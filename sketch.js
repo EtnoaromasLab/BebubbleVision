@@ -1,10 +1,9 @@
-let imageModelURL = 'https://teachablemachine.withgoogle.com/models/7zMLTbqSz/';
+let imageModelURL = 'https://teachablemachine.withgoogle.com/models/I_02OOZ7-/';
 let video;
 let flippedVideo;
 let label = "";
 let BRUTSound, BRUT_NATURESound, ROSESound, SEMI_SECSound, BRUT_RESERVASound;
 let audioContext;
-let model, webcam, labelContainer, maxPredictions;
 
 // flags to prevent overlapping sounds
 let BRUTPlaying = false;
@@ -34,7 +33,7 @@ function setup() {
 
 function draw() {
   background(0);
-  image(flippedVideo, 0, 0, width, height);
+  image(flippedVideo, 500, 50, width, height);
   fill(255);
   textSize(40);
   textAlign(CENTER);
