@@ -4,6 +4,7 @@ let flippedVideo;
 let label = "";
 let BRUTSound, BRUT_NATURESound, ROSESound, SEMI_SECSound, BRUT_RESERVASound;
 let audioContext;
+let model, webcam, labelContainer, maxPredictions;
 
 // flags to prevent overlapping sounds
 let BRUTPlaying = false;
@@ -33,15 +34,19 @@ function setup() {
 
 function draw() {
   background(0);
-  image(flippedVideo, 500, 50, width, height);
+  image(flippedVideo, 0, 0, width, height);
   fill(255);
   textSize(40);
   textAlign(CENTER);
   text(label, width / 2, height - 50);
 }
 
-function classifyVideo() {
+async function classifyVideo() {
   flippedVideo = ml5.flipImage(video)
+  const modelURL = imageModelURL + "model.json";
+  const metadataURL = imageModelURL + "metadata.json";
+  model = await tmImage.load(modelURL, metadataURL);
+  maxPredictions = model.getTotalClasses();
   classifier.classify(flippedVideo, gotResult);
   flippedVideo.remove();
 }
@@ -75,23 +80,34 @@ function gotResult(error, results) {
       if (!BRUT_NATUREPlaying) {
         BRUT_NATUREPlaying = true;
         BRUT_NATURESound.play(0, 1, 1);
-      }
-    } else if (label === "ROSE") {
-      if (!ROSEPlaying) {
-        ROSEPlaying = true;
-        ROSESound.play(0, 1, 1);
-      }
-    } else if (label === "SEMI_SEC") {
-      if (!SEMI_SECPlaying) {
-        SEMI_SECPlaying = true;
-        SEMI_SECSound.play(0, 1, 1);
-      }
-    } else {
-      if (!BRUT_RESERVAPlaying) {
-        BRUT_RESERVAPlaying = true;
-        BRUT_RESERVASound.play(0, 1, 1);
-      }
-    }
-  }
-  classifyVideo();
 }
+} else if (label === "ROSE") {
+if (!ROSEPlaying) {
+ROSEPlaying = true;
+ROSESound.play(0, 1, 1);
+}
+} else if (label === "SEMI_SEC") {
+if (!SEMI_SECPlaying) {
+SEMI_SECPlaying = true;
+SEMI_SECSound.play(0, 1, 1);
+}
+} else if (label === "BRUT_RESERVA") {
+if (!BRUT_RESERVAPlaying) {
+BRUT_RESERVAPlaying = true;
+BRUT_RESERVASound.play(0, 1, 1);
+}
+}
+}
+classifier.classify(flippedVideo, gotResult);
+}
+
+function windowResized() {
+resizeCanvas(windowWidth, windowHeight);
+}
+if (label === "BRUT_NATURE") {
+  if (!BRUT_NATUREPlaying) {
+    BRUT_NATUREPlaying = true;
+    BRUT_NATURESound.play(0, 1, 1);
+  }
+}
+
