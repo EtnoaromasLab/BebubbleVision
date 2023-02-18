@@ -1,4 +1,4 @@
-let imageModelURL = 'https://teachablemachine.withgoogle.com/models/I_02OOZ7-/';
+let imageModelURL = 'https://teachablemachine.withgoogle.com/models/7zMLTbqSz/';
 let video;
 let flippedVideo;
 let label = "";
@@ -41,12 +41,8 @@ function draw() {
   text(label, width / 2, height - 50);
 }
 
-async function classifyVideo() {
+function classifyVideo() {
   flippedVideo = ml5.flipImage(video)
-  const modelURL = imageModelURL + "model.json";
-  const metadataURL = imageModelURL + "metadata.json";
-  model = await tmImage.load(modelURL, metadataURL);
-  maxPredictions = model.getTotalClasses();
   classifier.classify(flippedVideo, gotResult);
   flippedVideo.remove();
 }
@@ -80,34 +76,23 @@ function gotResult(error, results) {
       if (!BRUT_NATUREPlaying) {
         BRUT_NATUREPlaying = true;
         BRUT_NATURESound.play(0, 1, 1);
-}
-} else if (label === "ROSE") {
-if (!ROSEPlaying) {
-ROSEPlaying = true;
-ROSESound.play(0, 1, 1);
-}
-} else if (label === "SEMI_SEC") {
-if (!SEMI_SECPlaying) {
-SEMI_SECPlaying = true;
-SEMI_SECSound.play(0, 1, 1);
-}
-} else if (label === "BRUT_RESERVA") {
-if (!BRUT_RESERVAPlaying) {
-BRUT_RESERVAPlaying = true;
-BRUT_RESERVASound.play(0, 1, 1);
-}
-}
-}
-classifier.classify(flippedVideo, gotResult);
-}
-
-function windowResized() {
-resizeCanvas(windowWidth, windowHeight);
-}
-if (label === "BRUT_NATURE") {
-  if (!BRUT_NATUREPlaying) {
-    BRUT_NATUREPlaying = true;
-    BRUT_NATURESound.play(0, 1, 1);
+      }
+    } else if (label === "ROSE") {
+      if (!ROSEPlaying) {
+        ROSEPlaying = true;
+        ROSESound.play(0, 1, 1);
+      }
+    } else if (label === "SEMI_SEC") {
+      if (!SEMI_SECPlaying) {
+        SEMI_SECPlaying = true;
+        SEMI_SECSound.play(0, 1, 1);
+      }
+    } else {
+      if (!BRUT_RESERVAPlaying) {
+        BRUT_RESERVAPlaying = true;
+        BRUT_RESERVASound.play(0, 1, 1);
+      }
+    }
   }
+  classifyVideo();
 }
-
