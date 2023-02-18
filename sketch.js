@@ -1,4 +1,3 @@
-
 import ml5
 from ml5 import image_classifier
 from ml5 import flip_image
@@ -19,87 +18,99 @@ SEMI_SECPlaying = False
 BRUT_RESERVAPlaying = False
 
 def preload():
-  global classifier, BRUTSound, BRUT_NATURESound, ROSESound, SEMI_SECSound, BRUT_RESERVASound
+    global classifier, BRUTSound, BRUT_NATURESound, ROSESound, SEMI_SECSound, BRUT_RESERVASound
 
-  classifier = image_classifier.load_model(imageModelURL + 'model.json')
-  BRUTSound = ml5.load_sound('audios/gran_baron.ogg')
-  BRUT_NATURESound = ml5.load_sound('audios/gran_baron1.ogg')
-  ROSESound = ml5.load_sound('audios/gran_baron2.ogg')
-  SEMI_SECSound = ml5.load_sound('audios/gran_baron3.ogg')
-  BRUT_RESERVASound = ml5.load_sound('audios/gran_baron4.ogg')
+    classifier = image_classifier.load_model(imageModelURL + 'model.json')
+    BRUTSound = ml5.load_sound('audios/gran_baron.ogg')
+    BRUT_NATURESound = ml5.load_sound('audios/gran_baron1.ogg')
+    ROSESound = ml5.load_sound('audios/gran_baron2.ogg')
+    SEMI_SECSound = ml5.load_sound('audios/gran_baron3.ogg')
+    BRUT_RESERVASound = ml5.load_sound('audios/gran_baron4.ogg')
 
 def setup():
-  global video, flippedVideo, audioContext
+    global video, flippedVideo, audioContext
 
-  size(windowWidth, windowHeight)
-  video = ml5.create_video()
-  video.size(width, height)
-  video.hide()
-  flippedVideo = flip_image(video)
-  classify_video()
-  audioContext = get_audio_context()
+    size(windowWidth, windowHeight)
+    video = ml5.create_video()
+    video.size(width, height)
+    video.hide()
+    flippedVideo = flip_image(video)
+    classify_video()
+    audioContext = get_audio_context()
 
 def draw():
-  global label
+    global label
 
-  background(0)
-  image(flippedVideo, 0, 0, width, height)
-  fill(255)
-  textSize(40)
-  textAlign(CENTER)
-  text(label, width / 2, height - 50)
+    background(0)
+    image(flippedVideo, 0, 0, width, height)
+    fill(255)
+    textSize(40)
+    textAlign(CENTER)
+    text(label, width / 2, height - 50)
 
 def classify_video():
-  global flippedVideo
+    global flippedVideo
 
-  flippedVideo = flip_image(video)
-  classifier.classify(flippedVideo, got_result)
-  flippedVideo.remove()
+    flippedVideo = flip_image(video)
+    classifier.classify(flippedVideo, got_result)
+    flippedVideo.remove()
 
 def got_result(error, results):
-  global label, BRUTPlaying, BRUT_NATUREPlaying, ROSEPlaying, SEMI_SECPlaying, BRUT_RESERVAPlaying
+    global label, BRUTPlaying, BRUT_NATUREPlaying, ROSEPlaying, SEMI_SECPlaying, BRUT_RESERVAPlaying
 
-  if error:
-    print(error)
-    return
-  
-  if results[0]['confidence'] > 0.9:
-    label = results[0]['label']
-    # pause all sounds
-    BRUTSound.pause()
-    BRUT_NATURESound.pause()
-    ROSESound.pause()
-   
-if results[0]['confidence'] > 0.9:
-    label = results[0]['label']
-    # pause all sounds
-    BRUTSound.pause()
-    BRUT_NATURESound.pause()
-    ROSESound.pause()
-    SEMI_SECSound.pause()
-    BRUT_RESERVASound.pause()
+    if error:
+        print(error)
+        return
 
-    # check the label and play the corresponding sound
-    if label == "BRUT":
-      if not BRUTPlaying:
-        BRUTSound.play()
-        BRUTPlaying = True
-    elif label == "BRUT_NATURE":
-      if not BRUT_NATUREPlaying:
-        BRUT_NATURESound.play()
-        BRUT_NATUREPlaying = True
-    elif label == "ROSÉ":
-      if not ROSEPlaying:
-        ROSESound.play()
-        ROSEPlaying = True
-    elif label == "SEMI-SEC":
-      if not SEMI_SECPlaying:
-        SEMI_SECSound.play()
-        SEMI_SECPlaying = True
-    elif label == "BRUT_RESERVA":
-      if not BRUT_RESERVAPlaying:
-        BRUT_RESERVASound.play()
-        BRUT_RESERVAPlaying = True
+    if results[0]['confidence'] > 0.9:
+        label = results[0]['label']
+        # pause all sounds
+        BRUTSound.pause()
+        BRUT_NATURESound.pause()
+        ROSESound.pause()
+        SEMI_SECSound.pause()
+        BRUT_RESERVASound.pause()
 
-  classify_video()
+       # check the label and play the corresponding sound
+if label == "BRUT":
+  if not BRUTPlaying:
+    BRUTSound.play()
+    BRUTPlaying = True
+  BRUT_NATURESound.pause()
+  ROSESound.pause()
+  SEMI_SECSound.pause()
+  BRUT_RESERVASound.pause()
+elif label == "BRUT_NATURE":
+  if not BRUT_NATUREPlaying:
+    BRUT_NATURESound.play()
+    BRUT_NATUREPlaying = True
+  BRUTSound.pause()
+  ROSESound.pause()
+  SEMI_SECSound.pause()
+  BRUT_RESERVASound.pause()
+elif label == "ROSÉ":
+  if not ROSEPlaying:
+    ROSESound.play()
+    ROSEPlaying = True
+  BRUTSound.pause()
+  BRUT_NATURESound.pause()
+  SEMI_SECSound.pause()
+  BRUT_RESERVASound.pause()
+elif label == "SEMI-SEC":
+  if not SEMI_SECPlaying:
+    SEMI_SECSound.play()
+    SEMI_SECPlaying = True
+  BRUTSound.pause()
+  BRUT_NATURESound.pause()
+  ROSESound.pause()
+  BRUT_RESERVASound.pause()
+elif label == "BRUT_RESERVA":
+  if not BRUT_RESERVAPlaying:
+    BRUT_RESERVASound.play()
+    BRUT_RESERVAPlaying = True
+  BRUTSound.pause()
+  BRUT_NATURESound.pause()
+  ROSESound.pause()
+  SEMI_SECSound.pause()
 
+classify_video()
