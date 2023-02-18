@@ -3,8 +3,7 @@ let video;
 let flippedVideo;
 let label = "";
 let BRUTSound, BRUT_NATURESound, ROSESound, SEMI_SECSound, BRUT_RESERVASound;
-let audioContext;
-let model, webcam, labelContainer, maxPredictions;
+let model, classifier, maxPredictions;
 
 // flags to prevent overlapping sounds
 let BRUTPlaying = false;
@@ -29,7 +28,6 @@ function setup() {
   video.hide();
   flippedVideo = ml5.flipImage(video);
   classifyVideo();
-  audioContext = getAudioContext();
 }
 
 function draw() {
@@ -80,34 +78,23 @@ function gotResult(error, results) {
       if (!BRUT_NATUREPlaying) {
         BRUT_NATUREPlaying = true;
         BRUT_NATURESound.play(0, 1, 1);
-}
-} else if (label === "ROSE") {
-if (!ROSEPlaying) {
-ROSEPlaying = true;
-ROSESound.play(0, 1, 1);
-}
-} else if (label === "SEMI_SEC") {
-if (!SEMI_SECPlaying) {
-SEMI_SECPlaying = true;
-SEMI_SECSound.play(0, 1, 1);
-}
-} else if (label === "BRUT_RESERVA") {
-if (!BRUT_RESERVAPlaying) {
-BRUT_RESERVAPlaying = true;
-BRUT_RESERVASound.play(0, 1, 1);
-}
-}
-}
-classifier.classify(flippedVideo, gotResult);
-}
-
-function windowResized() {
-resizeCanvas(windowWidth, windowHeight);
-}
-if (label === "BRUT_NATURE") {
-  if (!BRUT_NATUREPlaying) {
-    BRUT_NATUREPlaying = true;
-    BRUT_NATURESound.play(0, 1, 1);
+      }
+    } else if (label === "ROSE") {
+      if (!ROSEPlaying) {
+        ROSEPlaying = true;
+        ROSESound.play(0, 1, 1);
+      }
+    } else if (label === "SEMI_SEC") {
+      if (!SEMI_SECPlaying) {
+        SEMI_SECPlaying = true;
+        SEMI_SECSound.play(0, 1, 1);
+      }
+    } else if (label === "BRUT_RESERVA") {
+      if (!BRUT_RESERVAPlaying) {
+        BRUT_RESERVAPlaying = true;
+        BRUT_RESERVASound.play(0, 1, 1);
+      }
+    }
   }
+  classifier.classify(flippedVideo, gotResult);
 }
-
