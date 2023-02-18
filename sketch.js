@@ -1,116 +1,113 @@
-import ml5
-from ml5 import image_classifier
-from ml5 import flip_image
-from ml5 import get_audio_context
+let imageModelURL = 'https://teachablemachine.withgoogle.com/models/I_02OOZ7-/';
+let video;
+let flippedVideo;
+let label = "";
+let BRUTSound, BRUT_NATURESound, ROSESound, SEMI_SECSound, BRUT_RESERVASound;
+let audioContext;
+let model, webcam, labelContainer, maxPredictions;
 
-imageModelURL = 'https://teachablemachine.withgoogle.com/models/7zMLTbqSz/'
-video = None
-flippedVideo = None
-label = ""
-BRUTSound, BRUT_NATURESound, ROSESound, SEMI_SECSound, BRUT_RESERVASound = None, None, None, None, None
-audioContext = None
+// flags to prevent overlapping sounds
+let BRUTPlaying = false;
+let BRUT_NATUREPlaying = false;
+let ROSEPlaying = false;
+let SEMI_SECPlaying = false;
+let BRUT_RESERVAPlaying = false;
 
-# flags to prevent overlapping sounds
-BRUTPlaying = False
-BRUT_NATUREPlaying = False
-ROSEPlaying = False
-SEMI_SECPlaying = False
-BRUT_RESERVAPlaying = False
+function preload() {
+  classifier = ml5.imageClassifier(imageModelURL + 'model.json');
+  BRUTSound = loadSound('audios/gran_baron.ogg');
+  BRUT_NATURESound = loadSound('audios/gran_baron1.ogg');
+  ROSESound = loadSound('audios/gran_baron2.ogg');
+  SEMI_SECSound = loadSound('audios/gran_baron3.ogg');
+  BRUT_RESERVASound = loadSound('audios/gran_baron4.ogg');
+}
 
-def preload():
-    global classifier, BRUTSound, BRUT_NATURESound, ROSESound, SEMI_SECSound, BRUT_RESERVASound
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  video = createCapture(VIDEO);
+  video.size(width, height);
+  video.hide();
+  flippedVideo = ml5.flipImage(video);
+  classifyVideo();
+  audioContext = getAudioContext();
+}
 
-    classifier = image_classifier.load_model(imageModelURL + 'model.json')
-    BRUTSound = ml5.load_sound('audios/gran_baron.ogg')
-    BRUT_NATURESound = ml5.load_sound('audios/gran_baron1.ogg')
-    ROSESound = ml5.load_sound('audios/gran_baron2.ogg')
-    SEMI_SECSound = ml5.load_sound('audios/gran_baron3.ogg')
-    BRUT_RESERVASound = ml5.load_sound('audios/gran_baron4.ogg')
+function draw() {
+  background(0);
+  image(flippedVideo, 0, 0, width, height);
+  fill(255);
+  textSize(40);
+  textAlign(CENTER);
+  text(label, width / 2, height - 50);
+}
 
-def setup():
-    global video, flippedVideo, audioContext
+async function classifyVideo() {
+  flippedVideo = ml5.flipImage(video)
+  const modelURL = imageModelURL + "model.json";
+  const metadataURL = imageModelURL + "metadata.json";
+  model = await tmImage.load(modelURL, metadataURL);
+  maxPredictions = model.getTotalClasses();
+  classifier.classify(flippedVideo, gotResult);
+  flippedVideo.remove();
+}
 
-    size(windowWidth, windowHeight)
-    video = ml5.create_video()
-    video.size(width, height)
-    video.hide()
-    flippedVideo = flip_image(video)
-    classify_video()
-    audioContext = get_audio_context()
+function gotResult(error, results) {
+  if (error) {
+    console.error(error);
+    return;
+  }
+  if (results[0].confidence > 0.9) {
+    label = results[0].label;
+    // pause all sounds
+    BRUTSound.pause();
+    BRUT_NATURESound.pause();
+    ROSESound.pause();
+    SEMI_SECSound.pause();
+    BRUT_RESERVASound.pause();
+    // set flags to false
+    BRUTPlaying = false;
+    BRUT_NATUREPlaying = false;
+    ROSEPlaying = false;
+    SEMI_SECPlaying = false;
+    BRUT_RESERVAPlaying = false;
+    // check which sound to play
+    if (label === "BRUT") {
+      if (!BRUTPlaying) {
+        BRUTPlaying = true;
+        BRUTSound.play(0, 1, 1);
+      }
+    } else if (label === "BRUT_NATURE") {
+      if (!BRUT_NATUREPlaying) {
+        BRUT_NATUREPlaying = true;
+        BRUT_NATURESound.play(0, 1, 1);
+}
+} else if (label === "ROSE") {
+if (!ROSEPlaying) {
+ROSEPlaying = true;
+ROSESound.play(0, 1, 1);
+}
+} else if (label === "SEMI_SEC") {
+if (!SEMI_SECPlaying) {
+SEMI_SECPlaying = true;
+SEMI_SECSound.play(0, 1, 1);
+}
+} else if (label === "BRUT_RESERVA") {
+if (!BRUT_RESERVAPlaying) {
+BRUT_RESERVAPlaying = true;
+BRUT_RESERVASound.play(0, 1, 1);
+}
+}
+}
+classifier.classify(flippedVideo, gotResult);
+}
 
-def draw():
-    global label
+function windowResized() {
+resizeCanvas(windowWidth, windowHeight);
+}
+if (label === "BRUT_NATURE") {
+  if (!BRUT_NATUREPlaying) {
+    BRUT_NATUREPlaying = true;
+    BRUT_NATURESound.play(0, 1, 1);
+  }
+}
 
-    background(0)
-    image(flippedVideo, 0, 0, width, height)
-    fill(255)
-    textSize(40)
-    textAlign(CENTER)
-    text(label, width / 2, height - 50)
-
-def classify_video():
-    global flippedVideo
-
-    flippedVideo = flip_image(video)
-    classifier.classify(flippedVideo, got_result)
-    flippedVideo.remove()
-
-def got_result(error, results):
-    global label, BRUTPlaying, BRUT_NATUREPlaying, ROSEPlaying, SEMI_SECPlaying, BRUT_RESERVAPlaying
-
-    if error:
-        print(error)
-        return
-
-    if results[0]['confidence'] > 0.9:
-        label = results[0]['label']
-        # pause all sounds
-        BRUTSound.pause()
-        BRUT_NATURESound.pause()
-        ROSESound.pause()
-        SEMI_SECSound.pause()
-        BRUT_RESERVASound.pause()
-
-       # check the label and play the corresponding sound
-if label == "BRUT":
-  if not BRUTPlaying:
-    BRUTSound.play()
-    BRUTPlaying = True
-  BRUT_NATURESound.pause()
-  ROSESound.pause()
-  SEMI_SECSound.pause()
-  BRUT_RESERVASound.pause()
-elif label == "BRUT_NATURE":
-  if not BRUT_NATUREPlaying:
-    BRUT_NATURESound.play()
-    BRUT_NATUREPlaying = True
-  BRUTSound.pause()
-  ROSESound.pause()
-  SEMI_SECSound.pause()
-  BRUT_RESERVASound.pause()
-elif label == "ROSÉ":
-  if not ROSEPlaying:
-    ROSESound.play()
-    ROSEPlaying = True
-  BRUTSound.pause()
-  BRUT_NATURESound.pause()
-  SEMI_SECSound.pause()
-  BRUT_RESERVASound.pause()
-elif label == "SEMI-SEC":
-  if not SEMI_SECPlaying:
-    SEMI_SECSound.play()
-    SEMI_SECPlaying = True
-  BRUTSound.pause()
-  BRUT_NATURESound.pause()
-  ROSESound.pause()
-  BRUT_RESERVASound.pause()
-elif label == "BRUT_RESERVA":
-  if not BRUT_RESERVAPlaying:
-    BRUT_RESERVASound.play()
-    BRUT_RESERVAPlaying = True
-  BRUTSound.pause()
-  BRUT_NATURESound.pause()
-  ROSESound.pause()
-  SEMI_SECSound.pause()
-
-classify_video()
