@@ -3,7 +3,8 @@ let video;
 let flippedVideo;
 let label = "";
 let BRUTSound, BRUT_NATURESound, ROSESound, SEMI_SECSound, BRUT_RESERVASound;
-let model, classifier, maxPredictions;
+let audioContext;
+let model, webcam, labelContainer, maxPredictions;
 
 // flags to prevent overlapping sounds
 let BRUTPlaying = false;
@@ -28,6 +29,7 @@ function setup() {
   video.hide();
   flippedVideo = ml5.flipImage(video);
   classifyVideo();
+  audioContext = getAudioContext();
 }
 
 function draw() {
@@ -39,12 +41,8 @@ function draw() {
   text(label, width / 2, height - 50);
 }
 
-async function classifyVideo() {
+function classifyVideo() {
   flippedVideo = ml5.flipImage(video)
-  const modelURL = imageModelURL + "model.json";
-  const metadataURL = imageModelURL + "metadata.json";
-  model = await tmImage.load(modelURL, metadataURL);
-  maxPredictions = model.getTotalClasses();
   classifier.classify(flippedVideo, gotResult);
   flippedVideo.remove();
 }
@@ -89,12 +87,12 @@ function gotResult(error, results) {
         SEMI_SECPlaying = true;
         SEMI_SECSound.play(0, 1, 1);
       }
-    } else if (label === "BRUT_RESERVA") {
+    } else {
       if (!BRUT_RESERVAPlaying) {
         BRUT_RESERVAPlaying = true;
         BRUT_RESERVASound.play(0, 1, 1);
       }
     }
   }
-  classifier.classify(flippedVideo, gotResult);
+  classifyVideo();
 }
